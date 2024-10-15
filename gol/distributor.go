@@ -12,7 +12,10 @@ type distributorChannels struct {
 // distributor divides the work between workers and interacts with other goroutines.
 func distributor(p Params, c distributorChannels) {
 
-	// TODO: Create a 2D slice to store the world.
+	// create a 2D slice to store the world.
+	world := make([][]byte, p.ImageHeight)
+	for y := 0; y < p.ImageHeight; y++ {
+		world[y] = make([]byte, p.ImageWidth)
 
 	turn := 0
 	c.events <- StateChange{turn, Executing}
