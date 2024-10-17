@@ -89,7 +89,9 @@ func (io *ioState) writePgmImage() {
 func (io *ioState) readPgmImage() {
 
 	// Request a filename from the distributor.
+	println("before filename")
 	filename := <-io.channels.filename
+	println(filename)
 
 	data, ioError := os.ReadFile("images/" + filename + ".pgm")
 	util.Check(ioError)

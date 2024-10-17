@@ -1,6 +1,9 @@
 package gol
 
-import "uk.ac.bris.cs/gameoflife/util"
+import (
+	"uk.ac.bris.cs/gameoflife/util"
+	"strconv"
+)
 
 type distributorChannels struct {
 	events     chan<- Event
@@ -13,7 +16,15 @@ type distributorChannels struct {
 
 // distributor divides the work between workers and interacts with other goroutines.
 func distributor(p Params, c distributorChannels) {
-
+	//get the filename
+	imHeight := strconv.Itoa(p.ImageHeight)
+	imWidth := strconv.Itoa(p.ImageWidth)
+	filename := (imHeight+"x"+imWidth)
+	println(filename)
+	// read pgm requests the file name, this puts it in the channel
+	//command in command channel
+	c.ioCommand <- ioInput
+	c.ioFilename <- filename
 	// create a 2D slice to store the world.
 	world := make([][]uint8, p.ImageHeight)
 	for y := 0; y < p.ImageHeight; y++ {
@@ -30,8 +41,8 @@ func distributor(p Params, c distributorChannels) {
 			world[i][j] = <-c.ioInput //creating the initial world
 		}
 	}
-
-	for turn < p.Turns {
+println("read from initial world") // doesn't reach this
+	for turn := 0; turn < p.Turns; turn++ {
 		// Create the next world state (same dimensions as the current world)
 		nextWorld := make([][]byte, p.ImageHeight)
 		for i := range world {
@@ -74,8 +85,8 @@ func distributor(p Params, c distributorChannels) {
 	// TODO: report the final state using FinalTurnCompleteEvent.
 	aliveCells := []util.Cell{}
 
-	for i, row := range world {
-		for j := range row {
+	for i := 0; i < p.ImageHeight; i++ {
+		for j := 0; j < p.ImageWidth; j++ {
 			// If the cell is alive (i.e., has a value of 1)
 			if world[i][j] == 255 {
 				// Add the alive cell's coordinates (x, y) to the list of alive cells
