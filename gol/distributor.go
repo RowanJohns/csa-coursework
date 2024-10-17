@@ -15,17 +15,25 @@ type distributorChannels struct {
 func distributor(p Params, c distributorChannels) {
 
 	// create a 2D slice to store the world.
-	world := make([][]byte, p.ImageHeight)
+	world := make([][]uint8, p.ImageHeight)
 	for y := 0; y < p.ImageHeight; y++ {
-		world[y] = make([]byte, p.ImageWidth)
+		world[y] = make([]uint8, p.ImageWidth)
 	}
 
 	turn := 0
 	c.events <- StateChange{turn, Executing}
 
 	// TODO: complete all turns for GOL
-	// read initial world from input channel!!
+
+	for i := 0; i < p.ImageHeight; i++ {
+		for j := 0; j < p.ImageWidth; j++ {
+			world[i][j] = <-c.ioInput //creating the initial world
+		}
+	}
 	
+	for turn < p.Turns {
+
+	}
 	// TODO: report the final state using FinalTurnCompleteEvent.
 	aliveCells := []util.Cell{}
 	c.events <- FinalTurnComplete{turn, aliveCells}
